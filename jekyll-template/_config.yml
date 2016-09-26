@@ -1,8 +1,8 @@
 # Site settings
-title: Lorem Ipsum - Web Developer
+title: Letícia Rostirola - QA Test Engineer
 description: "Leris World"
-baseurl: "/jekyll-template" # the subpath of your site, e.g. /blog
-url: "http://ladylovelace.github.io"
+#baseurl: "/jekyll-template" # the subpath of your site, e.g. /blog
+url: "http://ladylovelace.github.io/"
 
 # User settings
 username: ladylovelace
