@@ -1,0 +1,48 @@
+# Site settings
+title: Letícia Rostirola - QA Test Engineer
+description: "Leris World"
+#baseurl: "/jekyll-template" # the subpath of your site, e.g. /blog
+url: "http://ladylovelace.github.io/"
+
+# User settings
+username: ladylovelace
+user_title: Lorem Ipsum - QA Test Engineer
+email: let.rostirola@gmail.com
+twitter_username: lrostirola
+github_username:  ladylovelace
+facebook_username:  leticiarss
+
+# Build settings
+markdown: kramdown
+highlighter: rouge
+permalink: /:title/
+
+
+# html minify
+compress_html:
+  clippings: all
+  comments: all
+  endings: []
+  profile: false
+
+# Links to include in menu navigation
+# For external links add external: true
+links:
+  - title: home
+    url: /
+  - title: my posts
+    url: /posts
+  - title: series
+    url: /series
+  - title: tags
+    url: /tags
+  - title: About me
+    url: /about
+# projects in header index
+projects:
+  - name: maoaberta
+    url: https://github.com/opensanca/maoaberta
+  - name: pyladies-sanca
+    url: https://github.com/ladylovelace/pyladies-sanca
+# exclude my node related stuff
+exclude: ['package.json', 'src', 'node_modules']
