@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checklist – Ubatuba 4 dias</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #e8f4f8;
+      color: #1a2f3a;
+      min-height: 100vh;
+      padding: 24px 16px 48px;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    header h1 {
+      font-size: 1.7rem;
+      font-weight: 800;
+      color: #0a3d62;
+      letter-spacing: 0.5px;
+    }
+
+    header p {
+      margin-top: 6px;
+      font-size: 0.9rem;
+      color: #2980b9;
+    }
+
+    .datas {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+    }
+
+    .data-badge {
+      background: #0a3d62;
+      color: #fff;
+      border-radius: 20px;
+      padding: 5px 16px;
+      font-size: 0.82rem;
+      font-weight: 600;
+    }
+
+    .progress-wrap {
+      max-width: 640px;
+      margin: 0 auto 28px;
+    }
+
+    .progress-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.82rem;
+      color: #2980b9;
+      margin-bottom: 6px;
+    }
+
+    .progress-bar {
+      height: 10px;
+      background: #b3d9f0;
+      border-radius: 99px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #1565c0, #2196f3);
+      border-radius: 99px;
+      transition: width 0.3s ease;
+      width: 0%;
+    }
+
+    .section {
+      max-width: 640px;
+      margin: 0 auto 20px;
+      background: #fff;
+      border-radius: 14px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+      overflow: hidden;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 18px;
+      background: #0a3d62;
+      color: #fff;
+      font-weight: 700;
+      font-size: 0.92rem;
+      letter-spacing: 0.3px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .section-header .icon {
+      font-size: 1.1rem;
+    }
+
+    .section-header .chevron {
+      margin-left: auto;
+      transition: transform 0.2s;
+    }
+
+    .section-header.collapsed .chevron {
+      transform: rotate(-90deg);
+    }
+
+    .section-body {
+      padding: 8px 0;
+    }
+
+    .section-body.hidden {
+      display: none;
+    }
+
+    .item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 11px 18px;
+      border-bottom: 1px solid #e8f4f8;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .item:last-child {
+      border-bottom: none;
+    }
+
+    .item:hover {
+      background: #f0f8ff;
+    }
+
+    .item.done {
+      opacity: 0.55;
+    }
+
+    .item.done .item-text {
+      text-decoration: line-through;
+    }
+
+    .item input[type="checkbox"] {
+      width: 20px;
+      height: 20px;
+      accent-color: #1565c0;
+      cursor: pointer;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .item-text {
+      font-size: 0.9rem;
+      line-height: 1.4;
+      color: #1a2f3a;
+    }
+
+    .item-note {
+      font-size: 0.78rem;
+      color: #5a90b0;
+      margin-top: 2px;
+    }
+
+    .item-opt {
+      font-size: 0.72rem;
+      background: #d0eaf8;
+      color: #0a5a8a;
+      border-radius: 99px;
+      padding: 1px 7px;
+      margin-left: 6px;
+      vertical-align: middle;
+      font-weight: 600;
+    }
+
+    .badge-obrig {
+      font-size: 0.68rem;
+      background: #e63946;
+      color: #fff;
+      border-radius: 99px;
+      padding: 1px 7px;
+      margin-left: 6px;
+      vertical-align: middle;
+      font-weight: 700;
+    }
+
+    .tip {
+      max-width: 640px;
+      margin: 0 auto 20px;
+      background: #fffbea;
+      border-left: 4px solid #e6a817;
+      border-radius: 10px;
+      padding: 12px 16px;
+      font-size: 0.85rem;
+      color: #5a4200;
+      line-height: 1.5;
+    }
+
+    .tip strong {
+      display: block;
+      margin-bottom: 4px;
+      color: #a06a00;
+    }
+
+    .reset-btn {
+      display: block;
+      max-width: 640px;
+      margin: 8px auto 0;
+      background: none;
+      border: 2px solid #b3d9f0;
+      color: #2980b9;
+      border-radius: 10px;
+      padding: 10px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      width: 100%;
+      transition: all 0.2s;
+    }
+
+    .reset-btn:hover {
+      background: #e8f4f8;
+      border-color: #2980b9;
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <h1>🏄 Ubatuba – iiHaaa</h1>
+    <p>Surf · Trilha de Ataque · Aleatoriedades</p>
+    <div class="datas">
+      <span class="data-badge">📅 4 dias</span>
+      <span class="data-badge">☀️ Abril/2026</span>
+    </div>
+  </header>
+
+  <div class="progress-wrap">
+    <div class="progress-label">
+      <span>Itens marcados</span>
+      <span id="progress-text">0 / 0</span>
+    </div>
+    <div class="progress-bar">
+      <div class="progress-fill" id="progress-fill"></div>
+    </div>
+  </div>
+
+  <div class="tip">
+    <strong>💡 Dica da viagem</strong>
+    Ubatuba em abril ainda tem sol e mar bom. Prancha e equipamento fornecidos pelo instrutor — foque no conforto e na
+    proteção solar. Na trilha de ataque, saia cedo para aproveitar a sombra da mata. Divida o fogareiro e o kit café com
+    quem te acompanha!
+  </div>
+
+  <!-- SURF -->
+  <div class="section">
+    <div class="section-header" onclick="toggleSection(this)">
+      <span class="icon">🏄</span> Surf
+      <span class="chevron">▾</span>
+    </div>
+    <div class="section-body">
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Maio UV Manga Longa + Top</div>
+          <div class="item-note">Proteção solar e evita fricção com a prancha</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Calça UV</div>
+          <div class="item-note">Não frite a perna e a bunda de novo !</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Protetor solar FPS 50+ resistente à água <span class="badge-obrig">ESSENCIAL</span>
+          </div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Toalha Secagem Rápida + canga</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Shorts Troca</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Sacola Plastica Roupa Molhada</div>
+        </div>
+      </label>
+            <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Toalha pro carro</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Água, Maça, Barrinha e Tachão</div>
+          <div class="item-note">Boost de energia</div>
+        </div>
+      </label>
+    </div>
+  </div>
+
+  <!-- TRILHA DE ATAQUE -->
+  <div class="section">
+    <div class="section-header" onclick="toggleSection(this)">
+      <span class="icon">🥾</span> Trilha de Ataque
+      <span class="chevron">▾</span>
+    </div>
+    <div class="section-body">
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Mochilinha de ataque (15–20L)</div>
+          <div class="item-note">Leve, só o essencial do dia</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Tênis de trilha ou bota leve</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Meia grossa (2 pares)</div>
+          <div class="item-note">Evitam bolhas</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Garrafa de água (1–1,5L) ou camel</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Snacks para trilha</div>
+          <div class="item-note">Barrinhas, frutas secas, castanhas</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Repelente</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Protetor solar</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Calça ou bermuda de trilha</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Camisa de manga longa UV</div>
+          <div class="item-note">Mata fechada = mosquito + arranhões</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Boné</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Óculos de sol</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Lanterna de cabeça <span class="item-opt">precaução</span></div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Kit socorro leve</div>
+          <div class="item-note">Band-aid, micropore, vaselina nos pés</div>
+        </div>
+      </label>
+    </div>
+  </div>
+
+  <!-- CAFÉ NA PRAIA -->
+  <div class="section">
+    <div class="section-header" onclick="toggleSection(this)">
+      <span class="icon">☕</span> Café na Praia
+      <span class="chevron">▾</span>
+    </div>
+    <div class="section-body">
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Fogareiro JetCook + gás (cartucho cheio)</div>
+          <div class="item-note">Verificar nível do gás antes de ir</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Moedor de café</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Aeropress Portatil com filtro</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Medidor + Grão Café</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Saco plástico / zip para o lixo do café</div>
+          <div class="item-note">Selo amiga da natureza ♻️</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Caneca</div>
+          <div class="item-note">Se resolver levar outro método de preparo</div>
+        </div>
+      </label>
+    </div>
+  </div>
+
+  <!-- ROUPA -->
+  <div class="section">
+    <div class="section-header" onclick="toggleSection(this)">
+      <span class="icon">👗</span> Vestuário e Acessórios Civis
+      <span class="chevron">▾</span>
+    </div>
+    <div class="section-body">
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Roupa de praia (4 conjuntos)</div>
+          <div class="item-note">Short, maiô, biquíni — um por dia</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Roupa pra sair à noite (5 conjuntos)</div>
+          <div class="item-note">Uma opção "melhorzinha" para restaurante</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Chinelo</div>
+          <div class="item-note">Praia</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Roupa casual passeio (2–3 peças)</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Roupa íntima + Meias</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Agasalho leve para noite</div>
+          <div class="item-note">Abril pode esfriar à noite no litoral norte</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Pijama</div>
+          <div class="item-note">Abril pode esfriar à noite no litoral norte</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Bolsa</div>
+          <div class="item-note">Carregar celular e dorgas estomago</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Colar</div>
+          <div class="item-note">Avalie itens civis de uma lady</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Elasticos Cabelo</div>
+          <div class="item-note">Uns 3</div>
+        </div>
+      </label>
+            <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Make Basic</div>
+          <div class="item-note">Protetor com Cor, Rímel, corretivo, batom, demaquilante e algodão</div>
+        </div>
+      </label>
+    </div>
+  </div>
+
+  <!-- HIGIENE E SAÚDE -->
+  <div class="section">
+    <div class="section-header" onclick="toggleSection(this)">
+      <span class="icon">🧴</span> Higiene e Saúde
+      <span class="chevron">▾</span>
+    </div>
+    <div class="section-body">
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Escova de dente + pasta + fio dental</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Shampoo + condicionador</div>
+          <div class="item-note">Cabelo pós-mar precisa de cuidado</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Escova Cabelo e/ou Escova Banho</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Oil Cabelo</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Desodorante</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Sabonete</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Hidratante pós-sol</div>
+          <div class="item-note">Pele ressecada pelo sal e sol</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Lenço umedecido</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Perfume</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Meclin, Polaramine</div>
+          <div class="item-note">Alergia — especialmente útil em trilha com vegetação</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">B12 (vitamina)</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Nebacetin + Band Aid</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Creatina</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Simeticona + Gastropro</div>
+          <div class="item-note">Gases e desconforto digestivo</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Dorflex / analgésico</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Protetor labial</div>
+        </div>
+      </label>
+    </div>
+  </div>
+
+  <!-- DOCUMENTOS E ESSENCIAIS -->
+  <div class="section">
+    <div class="section-header" onclick="toggleSection(this)">
+      <span class="icon">📱</span> Documentos e Eletrônicos
+      <span class="chevron">▾</span>
+    </div>
+    <div class="section-body">
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Documentos (RG/CNH)</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Cartão + dinheiro</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Celular + carregador</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Power bank</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">GoPro + cabo + fixadores <span class="item-opt">opcional</span></div>
+          <div class="item-note">Nascer do Sol e Trilha</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Relógio / smartwatch + cabo de carga</div>
+        </div>
+      </label>
+    </div>
+  </div>
+
+  <!-- TRABALHO -->
+  <div class="section">
+    <div class="section-header" onclick="toggleSection(this)">
+      <span class="icon">💼</span> Trabalho (Home Office)
+      <span class="chevron">▾</span>
+    </div>
+    <div class="section-body">
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Macbook + carregador</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Tablet + carregador <span class="item-opt">se usar</span></div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Fone de ouvido</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Bloco+Caneta</div>
+          <div class="item-note">Descompresão física</div>
+        </div>
+      </label>
+    </div>
+  </div>
+
+  <button class="reset-btn" onclick="resetAll()">🔄 Limpar todos os itens</button>
+
+  <script>
+    const STORAGE_KEY = 'ubatuba-checklist';
+
+    function getState() {
+      try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; } catch { return {}; }
+    }
+
+    function saveState(state) {
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch { }
+    }
+
+    function updateProgress() {
+      const all = document.querySelectorAll('input[type="checkbox"]');
+      const checked = document.querySelectorAll('input[type="checkbox"]:checked');
+      const pct = all.length ? Math.round((checked.length / all.length) * 100) : 0;
+      document.getElementById('progress-fill').style.width = pct + '%';
+      document.getElementById('progress-text').textContent = checked.length + ' / ' + all.length;
+    }
+
+    function toggleSection(header) {
+      header.classList.toggle('collapsed');
+      header.nextElementSibling.classList.toggle('hidden');
+    }
+
+    function resetAll() {
+      if (!confirm('Deseja limpar todos os itens marcados?')) return;
+      document.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+        cb.checked = false;
+        cb.closest('.item').classList.remove('done');
+      });
+      saveState({});
+      updateProgress();
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const state = getState();
+      const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+
+      checkboxes.forEach((cb, i) => {
+        if (state[i]) {
+          cb.checked = true;
+          cb.closest('.item').classList.add('done');
+        }
+
+        cb.addEventListener('change', () => {
+          cb.closest('.item').classList.toggle('done', cb.checked);
+          const newState = getState();
+          newState[i] = cb.checked;
+          saveState(newState);
+          updateProgress();
+        });
+      });
+
+      updateProgress();
+    });
+  </script>
+
+</body>
+
+</html>

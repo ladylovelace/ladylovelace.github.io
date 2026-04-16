@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checklist – Travessia Petrópolis x Teresópolis</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f0f4f0;
+      color: #2d3a2d;
+      min-height: 100vh;
+      padding: 24px 16px 48px;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    header h1 {
+      font-size: 1.7rem;
+      font-weight: 800;
+      color: #1a4a1a;
+      letter-spacing: 0.5px;
+    }
+
+    header p {
+      margin-top: 6px;
+      font-size: 0.9rem;
+      color: #557a55;
+    }
+
+    .datas {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+    }
+
+    .data-badge {
+      background: #1a4a1a;
+      color: #fff;
+      border-radius: 20px;
+      padding: 5px 16px;
+      font-size: 0.82rem;
+      font-weight: 600;
+    }
+
+    .progress-wrap {
+      max-width: 640px;
+      margin: 0 auto 28px;
+    }
+
+    .progress-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.82rem;
+      color: #557a55;
+      margin-bottom: 6px;
+    }
+
+    .progress-bar {
+      height: 10px;
+      background: #c8dbc8;
+      border-radius: 99px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #2d7a2d, #56c156);
+      border-radius: 99px;
+      transition: width 0.3s ease;
+      width: 0%;
+    }
+
+    .section {
+      max-width: 640px;
+      margin: 0 auto 20px;
+      background: #fff;
+      border-radius: 14px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+      overflow: hidden;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 18px;
+      background: #1a4a1a;
+      color: #fff;
+      font-weight: 700;
+      font-size: 0.92rem;
+      letter-spacing: 0.3px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .section-header .icon { font-size: 1.1rem; }
+    .section-header .chevron { margin-left: auto; transition: transform 0.2s; }
+    .section-header.collapsed .chevron { transform: rotate(-90deg); }
+
+    .section-body { padding: 8px 0; }
+    .section-body.hidden { display: none; }
+
+    .item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 11px 18px;
+      border-bottom: 1px solid #f0f4f0;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .item:last-child { border-bottom: none; }
+    .item:hover { background: #f7faf7; }
+    .item.done { opacity: 0.55; }
+    .item.done .item-text { text-decoration: line-through; }
+
+    .item input[type="checkbox"] {
+      width: 20px;
+      height: 20px;
+      accent-color: #2d7a2d;
+      cursor: pointer;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .item-text {
+      font-size: 0.9rem;
+      line-height: 1.4;
+      color: #2d3a2d;
+    }
+
+    .item-note {
+      font-size: 0.78rem;
+      color: #7a9a7a;
+      margin-top: 2px;
+    }
+
+    .item-opt {
+      font-size: 0.72rem;
+      background: #d0e8d0;
+      color: #2d6a2d;
+      border-radius: 99px;
+      padding: 1px 7px;
+      margin-left: 6px;
+      vertical-align: middle;
+      font-weight: 600;
+    }
+
+    .badge-obrig {
+      font-size: 0.68rem;
+      background: #e63946;
+      color: #fff;
+      border-radius: 99px;
+      padding: 1px 7px;
+      margin-left: 6px;
+      vertical-align: middle;
+      font-weight: 700;
+    }
+
+    .tip {
+      max-width: 640px;
+      margin: 0 auto 20px;
+      background: #fffbea;
+      border-left: 4px solid #e6a817;
+      border-radius: 10px;
+      padding: 12px 16px;
+      font-size: 0.85rem;
+      color: #5a4200;
+      line-height: 1.5;
+    }
+
+    .tip strong { display: block; margin-bottom: 4px; color: #a06a00; }
+
+    .reset-btn {
+      display: block;
+      max-width: 640px;
+      margin: 8px auto 0;
+      background: none;
+      border: 2px solid #c8dbc8;
+      color: #557a55;
+      border-radius: 10px;
+      padding: 10px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      width: 100%;
+      transition: all 0.2s;
+    }
+
+    .reset-btn:hover { background: #f0f4f0; border-color: #557a55; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>🏔 Travessia Petrópolis × Teresópolis</h1>
+  <p>Serra dos Órgãos · 39 km · Nível Intermediário Alto</p>
+  <div class="datas">
+    <span class="data-badge">🐣 03–05/04/2026 – Páscoa</span>
+
+  </div>
+</header>
+
+<div class="progress-wrap">
+  <div class="progress-label">
+    <span>Itens marcados</span>
+    <span id="progress-text">0 / 0</span>
+  </div>
+  <div class="progress-bar">
+    <div class="progress-fill" id="progress-fill"></div>
+  </div>
+</div>
+
+<div class="tip">
+  <strong>💡 Lembrete do guia</strong>
+  Você carregará a "casa nas costas" por 3 dias. Seja leve e compacto — mas não abra mão dos itens essenciais. Considere dividir a barraca com alguém para economizar peso.
+</div>
+
+<!-- MOCHILA E ACAMPAMENTO -->
+<div class="section">
+  <div class="section-header" onclick="toggleSection(this)">
+    <span class="icon">🎒</span> Mochila e Acampamento
+    <span class="chevron">▾</span>
+  </div>
+  <div class="section-body">
+    <label class="item">
+      <input type="checkbox"><div><div class="item-text">Mochila cargueira em boas condições</div><div class="item-note">Confortável e regulável</div></div>
+    </label>
+    <label class="item">
+      <input type="checkbox"><div><div class="item-text">Capa de chuva para a mochila</div></div>
+    </label>
+    <label class="item">
+      <input type="checkbox"><div><div class="item-text">Mochilinha de ataque (pequena)</div><div class="item-note">Usada nos trechos até os mirantes</div></div>
+    </label>
+    <label class="item">
+      <input type="checkbox"><div><div class="item-text">Barraca</div></div>
+    </label>
+    <label class="item">
+      <input type="checkbox"><div><div class="item-text">Saco de dormir (zero graus ou menos)</div></div>
+    </label>
+    <label class="item">
+      <input type="checkbox"><div><div class="item-text">Saco estanque pro saco de dormir</div></div>
+    </label>
+    <label class="item">
+      <input type="checkbox"><div><div class="item-text">Isolante térmico</div></div>
+    </label>
+    <label class="item">
+      <input type="checkbox"><div><div class="item-text">Liner <span class="item-opt">opcional</span></div></div>
+    </label>
+    <label class="item">
+      <input type="checkbox"><div><div class="item-text">Travesseiro inflável <span class="item-opt">opcional</span></div></div>
+    </label>
+    <label class="item">
+      <input type="checkbox"><div><div class="item-text">Pano para limpar barraca</div></div>
+    </label>
+    <label class="item">
+      <input type="checkbox"><div><div class="item-text">Saco de lixo</div><div class="item-note">Para proteger a mochila fora da barraca</div></div>
+    </label>
+    <label class="item">
+      <input type="checkbox"><div><div class="item-text">Saco de lixo extra</div></div>
+    </label>
+  </div>
+</div>
+
+<!-- EQUIPAMENTOS -->
+<div class="section">
+  <div class="section-header" onclick="toggleSection(this)">
+    <span class="icon">🔦</span> Equipamentos e Acessórios
+    <span class="chevron">▾</span>
+  </div>
+  <div class="section-body">
+    <label class="item">
+      <input type="checkbox"><div><div class="item-text">Bastões de caminhada (par)</div></div>
+    </label>
+    <label class="item">
+      <input type="checkbox"><div><div class="item-text">Lanterna de cabeça com pilhas reservas</div></div>
+    </label>
+    <label class="item">
+      <input type="checkbox"><div><div class="item-text">Lanterna reserva</div></div>
+    </label>
+    <label class="item">
+      <input type="checkbox"><div><div class="item-text">Carregador portátil pessoal (power bank)</div></div>
+    </label>
+    <label class="item">
+      <input type="checkbox"><div><div class="item-text">Camel 3L</div></div>
+    </label>
+    <label class="item">
+      <input type="checkbox"><div><div class="item-text">Garrafa vazia 500ml para isotônico</div></div>
+    </label>
+    <label class="item">
+      <input type="checkbox"><div><div class="item-text">Garrafa vazia extra</div></div>
+    </label>
+    <label class="item">
+      <input type="checkbox"><div><div class="item-text">Kit pratinho, caneca e talher</div></div>
+    </label>
+    <label class="item">
+      <input type="checkbox"><div><div class="item-text">Chinelo (acampamento)</div></div>
+    </label>
+    <label class="item">
+      <input type="checkbox"><div><div class="item-text">Fica no carro</div><div class="item-note">Troca de roupa + apoio pescoço</div></div>
+    </label>
+    <label class="item">
+      <input type="checkbox"><div><div class="item-text">GoPro + cabo + suporte</div></div>
+    </label>
+    <label class="item">
+      <input type="checkbox"><div><div class="item-text">Relógio + case + cabo</div></div>
+    </label>
+  </div>
+</div>
+
+<!-- VESTUÁRIO -->
+<div class="section">
+  <div class="section-header" onclick="toggleSection(this)">
+    <span class="icon">👕</span> Vestuário
+    <span class="chevron">▾</span>
+  </div>
+  <div class="section-body">
+    <label class="item">
+      <input type="checkbox"><div><div class="item-text">Bota impermeável em bom estado</div><div class="item-note">Não usar bota guardada há muito tempo sem uso</div></div>
+    </label>
+    <label class="item">
+      <input type="checkbox"><div><div class="item-text">2–3 meias grossas</div><div class="item-note">Evitam calos</div></div>
+    </label>
+    <label class="item">
+      <input type="checkbox"><div><div class="item-text">2–3 calças para trilha</div></div>
+    </label>
+    <label class="item">
+      <input type="checkbox"><div><div class="item-text">2–3 camisas para trilha (manga longa UV)</div></div>
+    </label>
+    <label class="item">
+      <input type="checkbox"><div><div class="item-text">Roupa íntima</div></div>
+    </label>
+    <label class="item">
+      <input type="checkbox"><div><div class="item-text">1 blusa pluma</div></div>
+    </label>
+    <label class="item">
+      <input type="checkbox"><div><div class="item-text">1 blusa quente dormir <span class="item-opt">opcional</span></div></div>
+    </label>
+    <label class="item">
+      <input type="checkbox"><div><div class="item-text">1 calça fleece (para dormir)</div></div>
+    </label>
+    <label class="item">
+      <input type="checkbox"><div><div class="item-text">1 jaqueta corta-vento impermeável</div></div>
+    </label>
+    <label class="item">
+      <input type="checkbox"><div><div class="item-text">Touca, luva peru, luva trilha</div></div>
+    </label>
+    <label class="item">
+      <input type="checkbox"><div><div class="item-text">Saco estanque roupas</div></div>
+    </label>
+    <label class="item">
+      <input type="checkbox"><div><div class="item-text">Viseira, boné ou bandana</div></div>
+    </label>
+    <label class="item">
+      <input type="checkbox"><div><div class="item-text">Óculos de sol</div></div>
+    </label>
+  </div>
+</div>
+
+<!-- HIGIENE E SAÚDE -->
+<div class="section">
+  <div class="section-header" onclick="toggleSection(this)">
+    <span class="icon">🧴</span> Higiene e Saúde
+    <span class="chevron">▾</span>
+  </div>
+  <div class="section-body">
+    <label class="item">
+      <input type="checkbox"><div><div class="item-text">Mini escova de dente + pasta + fio dental</div></div>
+    </label>
+    <label class="item">
+      <input type="checkbox"><div><div class="item-text">Mini escova de cabelo</div></div>
+    </label>
+    <label class="item">
+      <input type="checkbox"><div><div class="item-text">Desodorante spray</div></div>
+    </label>
+    <label class="item">
+      <input type="checkbox"><div><div class="item-text">Perfuminho</div></div>
+    </label>
+    <label class="item">
+      <input type="checkbox"><div><div class="item-text">Elástico de cabelo</div></div>
+    </label>
+    <label class="item">
+      <input type="checkbox"><div><div class="item-text">PH + ziplock bolso</div></div>
+    </label>
+    <label class="item">
+      <input type="checkbox"><div><div class="item-text">Lenço umedecido bolso</div></div>
+    </label>
+    <label class="item">
+      <input type="checkbox"><div><div class="item-text">Lenço umedecido banho</div></div>
+    </label>
+    <label class="item">
+      <input type="checkbox"><div><div class="item-text">Shit tube individual</div><div class="item-note">Saco estanque com cal, jornal e sacolinha</div></div>
+    </label>
+    <label class="item">
+      <input type="checkbox"><div><div class="item-text">Protetor solar e labial</div></div>
+    </label>
+    <label class="item">
+      <input type="checkbox"><div><div class="item-text">Remédios habituais</div><div class="item-note">Meclin, estômago, Dorflex, Neosaldina, Polaramine, creatina</div></div>
+    </label>
+  </div>
+</div>
+
+<!-- SEGURANÇA -->
+<div class="section">
+  <div class="section-header" onclick="toggleSection(this)">
+    <span class="icon">🚨</span> Segurança
+    <span class="chevron">▾</span>
+  </div>
+  <div class="section-body">
+    <label class="item">
+      <input type="checkbox"><div><div class="item-text">Cobertor de emergência <span class="badge-obrig">OBRIGATÓRIO</span></div></div>
+    </label>
+    <label class="item">
+      <input type="checkbox"><div><div class="item-text">Apito</div></div>
+    </label>
+    <label class="item">
+      <input type="checkbox"><div><div class="item-text">Lona leve</div></div>
+    </label>
+    <label class="item">
+      <input type="checkbox"><div><div class="item-text">Para machucados</div><div class="item-note">Nebacetin, band-aid, micropore, vaselina</div></div>
+    </label>
+  </div>
+</div>
+
+<!-- LANCHES -->
+<div class="section">
+  <div class="section-header" onclick="toggleSection(this)">
+    <span class="icon">🍎</span> Lanches para Trilha
+    <span class="chevron">▾</span>
+  </div>
+  <div class="section-body">
+    <label class="item">
+      <input type="checkbox"><div><div class="item-text">Maçãs</div><div class="item-note">A cada mordida uma nova vitória. Confia</div></div>
+    </label>
+    <label class="item">
+      <input type="checkbox"><div><div class="item-text">Frutas secas e bananinha</div></div>
+    </label>
+    <label class="item">
+      <input type="checkbox"><div><div class="item-text">Tâmaras</div></div>
+    </label>
+    <label class="item">
+      <input type="checkbox"><div><div class="item-text">Barrinhas de proteína</div></div>
+    </label>
+    <label class="item">
+      <input type="checkbox"><div><div class="item-text">Snack salgado</div></div>
+    </label>
+    <label class="item">
+      <input type="checkbox"><div><div class="item-text">3 bolachões de arroz fino</div></div>
+    </label>
+    <label class="item">
+      <input type="checkbox"><div><div class="item-text">3 isotônicos em pó</div></div>
+    </label>
+  </div>
+</div>
+
+<button class="reset-btn" onclick="resetAll()">🔄 Limpar todos os itens</button>
+
+<script>
+  const STORAGE_KEY = 'travessia-checklist';
+
+  function getState() {
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; } catch { return {}; }
+  }
+
+  function saveState(state) {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch {}
+  }
+
+  function updateProgress() {
+    const all = document.querySelectorAll('input[type="checkbox"]');
+    const checked = document.querySelectorAll('input[type="checkbox"]:checked');
+    const pct = all.length ? Math.round((checked.length / all.length) * 100) : 0;
+    document.getElementById('progress-fill').style.width = pct + '%';
+    document.getElementById('progress-text').textContent = checked.length + ' / ' + all.length;
+  }
+
+  function toggleSection(header) {
+    header.classList.toggle('collapsed');
+    header.nextElementSibling.classList.toggle('hidden');
+  }
+
+  function resetAll() {
+    if (!confirm('Deseja limpar todos os itens marcados?')) return;
+    document.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+      cb.checked = false;
+      cb.closest('.item').classList.remove('done');
+    });
+    saveState({});
+    updateProgress();
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const state = getState();
+    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+
+    checkboxes.forEach((cb, i) => {
+      if (state[i]) {
+        cb.checked = true;
+        cb.closest('.item').classList.add('done');
+      }
+
+      cb.addEventListener('change', () => {
+        cb.closest('.item').classList.toggle('done', cb.checked);
+        const newState = getState();
+        newState[i] = cb.checked;
+        saveState(newState);
+        updateProgress();
+      });
+    });
+
+    updateProgress();
+  });
+</script>
+
+</body>
+</html>

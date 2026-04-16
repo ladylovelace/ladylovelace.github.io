@@ -44,5 +44,7 @@ projects:
     url: https://github.com/opensanca/maoaberta
   - name: pyladies-sanca
     url: https://github.com/ladylovelace/pyladies-sanca
+  - name: lerolist
+    url: /lerolist
 # exclude my node related stuff
 exclude: ['package.json', 'src', 'node_modules']
