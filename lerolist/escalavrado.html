@@ -1,0 +1,164 @@
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', sans-serif; background: #e8f4f8; color: #1a2f3a; padding: 24px 16px 48px; }
+header { text-align: center; margin-bottom: 32px; }
+header h1 { font-size: 1.5rem; font-weight: 800; color: #0a3d62; }
+header p { margin-top: 6px; font-size: 0.88rem; color: #2980b9; }
+.datas { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
+.data-badge { background: #0a3d62; color: #fff; border-radius: 20px; padding: 4px 14px; font-size: 0.78rem; font-weight: 600; }
+.progress-wrap { max-width: 600px; margin: 0 auto 24px; }
+.progress-label { display: flex; justify-content: space-between; font-size: 0.8rem; color: #2980b9; margin-bottom: 6px; }
+.progress-bar { height: 9px; background: #b3d9f0; border-radius: 99px; overflow: hidden; }
+.progress-fill { height: 100%; background: linear-gradient(90deg,#1565c0,#2196f3); border-radius: 99px; transition: width 0.3s; width: 0%; }
+.section { max-width: 600px; margin: 0 auto 16px; background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 1px 6px rgba(0,0,0,0.07); }
+.section-header { display: flex; align-items: center; gap: 8px; padding: 12px 16px; background: #0a3d62; color: #fff; font-weight: 700; font-size: 0.88rem; cursor: pointer; user-select: none; }
+.section-header .chevron { margin-left: auto; transition: transform 0.2s; }
+.section-header.collapsed .chevron { transform: rotate(-90deg); }
+.section-body { padding: 4px 0; }
+.section-body.hidden { display: none; }
+.item { display: flex; align-items: flex-start; gap: 10px; padding: 10px 16px; border-bottom: 1px solid #e8f4f8; cursor: pointer; transition: background 0.12s; }
+.item:last-child { border-bottom: none; }
+.item:hover { background: #f0f8ff; }
+.item.done { opacity: 0.5; }
+.item.done .item-text { text-decoration: line-through; }
+.item input[type="checkbox"] { width: 18px; height: 18px; accent-color: #1565c0; cursor: pointer; flex-shrink: 0; margin-top: 2px; }
+.item-text { font-size: 0.87rem; line-height: 1.4; color: #1a2f3a; }
+.item-note { font-size: 0.75rem; color: #5a90b0; margin-top: 2px; }
+.badge-obrig { font-size: 0.65rem; background: #e63946; color: #fff; border-radius: 99px; padding: 1px 7px; margin-left: 5px; vertical-align: middle; font-weight: 700; }
+.badge-warn { font-size: 0.65rem; background: #e6a817; color: #fff; border-radius: 99px; padding: 1px 7px; margin-left: 5px; vertical-align: middle; font-weight: 700; }
+.tip { max-width: 600px; margin: 0 auto 16px; background: #fffbea; border-left: 4px solid #e6a817; border-radius: 0 8px 8px 0; padding: 10px 14px; font-size: 0.82rem; color: #5a4200; line-height: 1.5; }
+.tip strong { display: block; margin-bottom: 3px; color: #a06a00; }
+.obs-section { max-width: 600px; margin: 0 auto 16px; background: #fff; border-radius: 12px; padding: 16px; box-shadow: 0 1px 6px rgba(0,0,0,0.07); }
+.obs-section h3 { font-size: 0.88rem; font-weight: 700; color: #0a3d62; margin-bottom: 8px; }
+.obs-section textarea { width: 100%; min-height: 70px; border: 1px solid #b3d9f0; border-radius: 8px; padding: 8px 10px; font-family: 'Segoe UI', sans-serif; font-size: 0.84rem; color: #1a2f3a; resize: vertical; outline: none; }
+.reset-btn { display: block; max-width: 600px; margin: 6px auto 0; background: none; border: 2px solid #b3d9f0; color: #2980b9; border-radius: 10px; padding: 9px; font-size: 0.83rem; cursor: pointer; width: 100%; transition: all 0.2s; }
+.reset-btn:hover { background: #e8f4f8; }
+</style>
+
+<header>
+  <h1>🧗 Checklist – Escalavrado</h1>
+  <p>Trilha: Escalavrado – Serra dos Órgãos</p>
+  <div class="datas">
+    <span class="data-badge">🏔 Serra dos Órgãos</span>
+    <span class="data-badge">⚡ Intermediária</span>
+  </div>
+</header>
+
+<div class="progress-wrap">
+  <div class="progress-label"><span>Itens marcados</span><span id="pt">0 / 0</span></div>
+  <div class="progress-bar"><div class="progress-fill" id="pf"></div></div>
+</div>
+
+<div class="tip"><strong>💡 Dica</strong>Use o sistema de 3 camadas para o frio da serra. Não treine pernas na véspera — você vai precisar de tudo delas na trilha!</div>
+
+<div class="section">
+  <div class="section-header" onclick="toggle(this)"><span>📅</span> Antes de Ir<span class="chevron">▾</span></div>
+  <div class="section-body">
+    <label class="item"><input type="checkbox"><div><div class="item-text">Cortar as unhas dos pés <span class="badge-warn">IMPORTANTE</span></div></div></label>
+    <label class="item"><input type="checkbox"><div><div class="item-text">NÃO treinar pernas na véspera <span class="badge-warn">IMPORTANTE</span></div></div></label>
+    <label class="item"><input type="checkbox"><div><div class="item-text">Mala compacta (apenas o essencial)</div></div></label>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-header" onclick="toggle(this)"><span>🎒</span> Equipamentos de Trilha<span class="chevron">▾</span></div>
+  <div class="section-body">
+    <label class="item"><input type="checkbox"><div><div class="item-text">Mochila para trilha <span class="badge-obrig">ESSENCIAL</span></div></div></label>
+    <label class="item"><input type="checkbox"><div><div class="item-text">Lanterna de cabeça <span class="badge-obrig">ESSENCIAL</span></div><div class="item-note">Pilhas novas + reservas</div></div></label>
+    <label class="item"><input type="checkbox"><div><div class="item-text">Garrafa de hidratação <span class="badge-obrig">ESSENCIAL</span></div><div class="item-note">2–3 litros</div></div></label>
+    <label class="item"><input type="checkbox"><div><div class="item-text">Caneca pro café</div></div></label>
+    <label class="item"><input type="checkbox"><div><div class="item-text">Protetor solar</div></div></label>
+    <label class="item"><input type="checkbox"><div><div class="item-text">Protetor labial</div></div></label>
+    <label class="item"><input type="checkbox"><div><div class="item-text">Remédios habituais</div><div class="item-note">Caso necessite</div></div></label>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-header" onclick="toggle(this)"><span>🧥</span> Vestuário – 3 Camadas<span class="chevron">▾</span></div>
+  <div class="section-body">
+    <label class="item"><input type="checkbox"><div><div class="item-text">Bota ou Tênis aderente <span class="badge-obrig">ESSENCIAL</span></div><div class="item-note">Solado com boa aderência para terreno irregular</div></div></label>
+    <label class="item"><input type="checkbox"><div><div class="item-text">Meias grossas</div><div class="item-note">Evitam calos</div></div></label>
+    <label class="item"><input type="checkbox"><div><div class="item-text">Calça para trilha <span class="badge-obrig">ESSENCIAL</span></div><div class="item-note">Confortável — calça jeans nem pensar</div></div></label>
+    <label class="item"><input type="checkbox"><div><div class="item-text">1ª camada: Camisa para trilha</div><div class="item-note">Manga longa com proteção UV</div></div></label>
+    <label class="item"><input type="checkbox"><div><div class="item-text">2ª camada: Blusa fleece ou pluma</div></div></label>
+    <label class="item"><input type="checkbox"><div><div class="item-text">3ª camada: Jaqueta corta-vento impermeável</div></div></label>
+    <label class="item"><input type="checkbox"><div><div class="item-text">Touca e Luvas</div><div class="item-note">Essenciais no cume da serra</div></div></label>
+    <label class="item"><input type="checkbox"><div><div class="item-text">Óculos de sol</div></div></label>
+    <label class="item"><input type="checkbox"><div><div class="item-text">Viseira, Boné ou Bandana</div></div></label>
+    <label class="item"><input type="checkbox"><div><div class="item-text">Roupa íntima</div></div></label>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-header" onclick="toggle(this)"><span>🏠</span> Fica na Hospedagem<span class="chevron">▾</span></div>
+  <div class="section-body">
+    <label class="item"><input type="checkbox"><div><div class="item-text">Roupa para troca</div></div></label>
+    <label class="item"><input type="checkbox"><div><div class="item-text">Chinelo</div></div></label>
+    <label class="item"><input type="checkbox"><div><div class="item-text">Itens de banho</div><div class="item-note">Shampoo, sabonete, toalha</div></div></label>
+    <label class="item"><input type="checkbox"><div><div class="item-text">Pijama</div></div></label>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-header" onclick="toggle(this)"><span>🍎</span> Sugestões de Lanches para Trilha<span class="chevron">▾</span></div>
+  <div class="section-body">
+    <label class="item"><input type="checkbox"><div><div class="item-text">Maçãs <span class="badge-obrig">ESSENCIAL</span></div></div></label>
+    <label class="item"><input type="checkbox"><div><div class="item-text">Frutas</div></div></label>
+    <label class="item"><input type="checkbox"><div><div class="item-text">Castanhas</div></div></label>
+    <label class="item"><input type="checkbox"><div><div class="item-text">Amendoins</div></div></label>
+    <label class="item"><input type="checkbox"><div><div class="item-text">Barrinhas de proteína</div></div></label>
+    <label class="item"><input type="checkbox"><div><div class="item-text">Sanduíches</div></div></label>
+    <label class="item"><input type="checkbox"><div><div class="item-text">Sneakers</div></div></label>
+    <label class="item"><input type="checkbox"><div><div class="item-text">Salamitos</div></div></label>
+    <label class="item"><input type="checkbox"><div><div class="item-text">Atum</div></div></label>
+    <label class="item"><input type="checkbox"><div><div class="item-text">Bananinha</div></div></label>
+    <label class="item"><input type="checkbox"><div><div class="item-text">Marmitinhas</div></div></label>
+    <label class="item"><input type="checkbox"><div><div class="item-text">Isotônico</div></div></label>
+    <label class="item"><input type="checkbox"><div><div class="item-text">Carbogel</div></div></label>
+  </div>
+</div>
+
+
+<div class="section">
+  <div class="section-header" onclick="toggle(this)"><span>🆘</span> Segurança<span class="chevron">▾</span></div>
+  <div class="section-body">
+    <label class="item"><input type="checkbox"><div><div class="item-text">Cobertor de Emergência <span class="badge-obrig">ESSENCIAL</span></div></div></label>
+    <label class="item"><input type="checkbox"><div><div class="item-text">Apito <span class="badge-obrig">ESSENCIAL</span></div></div></label>
+    <label class="item"><input type="checkbox"><div><div class="item-text">Capacete</div><div class="item-note">Se tiver</div></div></label>
+    <label class="item"><input type="checkbox"><div><div class="item-text">Mosquetão</div><div class="item-note">Se tiver</div></div></label>
+    <label class="item"><input type="checkbox"><div><div class="item-text">Cadeirinha</div><div class="item-note">Se tiver</div></div></label>
+  </div>
+</div>
+
+<div class="obs-section">
+  <h3>📝 Observações</h3>
+  <textarea id="obs" placeholder="Anote aqui qualquer detalhe específico desta trilha..."></textarea>
+</div>
+
+<button class="reset-btn" onclick="resetAll()">🔄 Limpar todos os itens</button>
+
+<script>
+function toggle(h) {
+  h.classList.toggle('collapsed');
+  h.nextElementSibling.classList.toggle('hidden');
+}
+function updateProgress() {
+  const all = document.querySelectorAll('input[type=checkbox]');
+  const checked = document.querySelectorAll('input[type=checkbox]:checked');
+  const pct = all.length ? Math.round(checked.length / all.length * 100) : 0;
+  document.getElementById('pf').style.width = pct + '%';
+  document.getElementById('pt').textContent = checked.length + ' / ' + all.length;
+}
+function resetAll() {
+  if (!confirm('Deseja limpar todos os itens?')) return;
+  document.querySelectorAll('input[type=checkbox]').forEach(cb => { cb.checked = false; cb.closest('.item').classList.remove('done'); });
+  updateProgress();
+}
+document.querySelectorAll('input[type=checkbox]').forEach(cb => {
+  cb.addEventListener('change', () => {
+    cb.closest('.item').classList.toggle('done', cb.checked);
+    updateProgress();
+  });
+});
+updateProgress();
+</script>
