@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checklist – Viagem Voo Nacional</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #e8f4f8;
+      color: #1a2f3a;
+      min-height: 100vh;
+      padding: 24px 16px 48px;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    header h1 {
+      font-size: 1.7rem;
+      font-weight: 800;
+      color: #0a3d62;
+      letter-spacing: 0.5px;
+    }
+
+    header p {
+      margin-top: 6px;
+      font-size: 0.9rem;
+      color: #2980b9;
+    }
+
+    .datas {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+    }
+
+    .data-badge {
+      background: #0a3d62;
+      color: #fff;
+      border-radius: 20px;
+      padding: 5px 16px;
+      font-size: 0.82rem;
+      font-weight: 600;
+    }
+
+    .progress-wrap {
+      max-width: 640px;
+      margin: 0 auto 28px;
+    }
+
+    .progress-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.82rem;
+      color: #2980b9;
+      margin-bottom: 6px;
+    }
+
+    .progress-bar {
+      height: 10px;
+      background: #b3d9f0;
+      border-radius: 99px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #1565c0, #2196f3);
+      border-radius: 99px;
+      transition: width 0.3s ease;
+      width: 0%;
+    }
+
+    .section {
+      max-width: 640px;
+      margin: 0 auto 20px;
+      background: #fff;
+      border-radius: 14px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+      overflow: hidden;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 18px;
+      background: #0a3d62;
+      color: #fff;
+      font-weight: 700;
+      font-size: 0.92rem;
+      letter-spacing: 0.3px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .section-header .icon {
+      font-size: 1.1rem;
+    }
+
+    .section-header .chevron {
+      margin-left: auto;
+      transition: transform 0.2s;
+    }
+
+    .section-header.collapsed .chevron {
+      transform: rotate(-90deg);
+    }
+
+    .section-body {
+      padding: 8px 0;
+    }
+
+    .section-body.hidden {
+      display: none;
+    }
+
+    .item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 11px 18px;
+      border-bottom: 1px solid #e8f4f8;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .item:last-child {
+      border-bottom: none;
+    }
+
+    .item:hover {
+      background: #f0f8ff;
+    }
+
+    .item.done {
+      opacity: 0.55;
+    }
+
+    .item.done .item-text {
+      text-decoration: line-through;
+    }
+
+    .item input[type="checkbox"] {
+      width: 20px;
+      height: 20px;
+      accent-color: #1565c0;
+      cursor: pointer;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .item-text {
+      font-size: 0.9rem;
+      line-height: 1.4;
+      color: #1a2f3a;
+    }
+
+    .item-note {
+      font-size: 0.78rem;
+      color: #5a90b0;
+      margin-top: 2px;
+    }
+
+    .item-opt {
+      font-size: 0.72rem;
+      background: #d0eaf8;
+      color: #0a5a8a;
+      border-radius: 99px;
+      padding: 1px 7px;
+      margin-left: 6px;
+      vertical-align: middle;
+      font-weight: 600;
+    }
+
+    .badge-obrig {
+      font-size: 0.68rem;
+      background: #e63946;
+      color: #fff;
+      border-radius: 99px;
+      padding: 1px 7px;
+      margin-left: 6px;
+      vertical-align: middle;
+      font-weight: 700;
+    }
+
+    .tip {
+      max-width: 640px;
+      margin: 0 auto 20px;
+      background: #fffbea;
+      border-left: 4px solid #e6a817;
+      border-radius: 10px;
+      padding: 12px 16px;
+      font-size: 0.85rem;
+      color: #5a4200;
+      line-height: 1.5;
+    }
+
+    .tip strong {
+      display: block;
+      margin-bottom: 4px;
+      color: #a06a00;
+    }
+
+    .obs-box {
+      max-width: 640px;
+      margin: 0 auto 20px;
+      background: #fdeeee;
+      border-left: 4px solid #e63946;
+      border-radius: 10px;
+      padding: 14px 18px;
+      font-size: 0.85rem;
+      color: #5a1a1a;
+      line-height: 1.6;
+    }
+
+    .obs-box strong.title {
+      display: block;
+      margin-bottom: 8px;
+      color: #c0392b;
+      font-size: 0.95rem;
+    }
+
+    .obs-box h4 {
+      margin-top: 10px;
+      margin-bottom: 4px;
+      color: #c0392b;
+      font-size: 0.85rem;
+    }
+
+    .obs-box ul {
+      margin: 0 0 4px 18px;
+    }
+
+    .obs-box li {
+      margin-bottom: 2px;
+    }
+
+    .reset-btn {
+      display: block;
+      max-width: 640px;
+      margin: 8px auto 0;
+      background: none;
+      border: 2px solid #b3d9f0;
+      color: #2980b9;
+      border-radius: 10px;
+      padding: 10px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      width: 100%;
+      transition: all 0.2s;
+    }
+
+    .reset-btn:hover {
+      background: #e8f4f8;
+      border-color: #2980b9;
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <h1>✈️ Viagem Voo Nacional</h1>
+    <p>Trabalho remoto · Passeio urbano</p>
+    <div class="datas">
+      <span class="data-badge">📅 4–5 dias</span>
+      <span class="data-badge">🧳 Bagagem de mão</span>
+    </div>
+  </header>
+
+  <div class="progress-wrap">
+    <div class="progress-label">
+      <span>Itens marcados</span>
+      <span id="progress-text">0 / 0</span>
+    </div>
+    <div class="progress-bar">
+      <div class="progress-fill" id="progress-fill"></div>
+    </div>
+  </div>
+
+  <div class="tip">
+    <strong>💡 Dica da viagem</strong>
+    Voo nacional, então dá pra organizar tudo numa mala de mão + mochila de trabalho. Confira franquia de bagagem da
+    companhia antes de fazer as malas (algumas tarifas promocionais só permitem 1 item pessoal). Chegue ao aeroporto
+    com antecedência e separe os eletrônicos/líquidos num compartimento de fácil acesso para agilizar a inspeção.
+  </div>
+
+  <div class="obs-box">
+    <strong class="title">⚠️ Obs: Limites de líquidos e itens na bagagem de mão</strong>
+
+    <h4>Líquidos, géis e aerossóis</h4>
+    <ul>
+      <li>Cada recipiente deve ter no máximo <strong>100 ml</strong> (mesmo que esteja parcialmente cheio)</li>
+      <li>Todos os recipientes devem caber juntos numa <strong>embalagem plástica transparente de até 1 litro</strong></li>
+      <li>Inclui: perfume, hidratante, shampoo/condicionador, protetor solar, géis de cabelo, pasta de dente, batom
+        líquido, esmalte</li>
+      <li>Itens fora desses limites devem ir na bagagem despachada</li>
+    </ul>
+
+    <h4>Medicamentos e itens especiais</h4>
+    <ul>
+      <li>Medicamentos líquidos e de uso contínuo são permitidos acima de 100 ml, mas é recomendável levar
+        receita médica ou comprovante</li>
+      <li>Alimentos para bebê e líquidos para necessidades médicas têm exceção, mas podem passar por inspeção extra
+      </li>
+    </ul>
+
+    <h4>Eletrônicos</h4>
+    <ul>
+      <li>Notebook, tablet e câmeras geralmente precisam ser retirados da bolsa na inspeção de raio-x</li>
+      <li>Power banks e baterias de íon-lítio <strong>só podem ir na bagagem de mão</strong> (proibidos na despachada)
+      </li>
+      <li>Verifique o limite de mAh/Wh da companhia aérea para power banks e baterias extras</li>
+    </ul>
+
+    <h4>Itens proibidos na bagagem de mão</h4>
+    <ul>
+      <li>Objetos cortantes ou perfurantes (tesoura grande, canivete, lâmina, alicate de unha com ponta — varia por
+        empresa)</li>
+      <li>Isqueiros e fósforos (regras variam: alguns permitem 1 isqueiro no bolso, mas não na bagagem)</li>
+      <li>Armas, réplicas e materiais inflamáveis/explosivos</li>
+    </ul>
+
+    <p style="margin-top:8px; font-size:0.78rem;">As regras podem variar entre companhias aéreas — vale conferir o site
+      da ANAC e da empresa antes de viajar.</p>
+  </div>
+
+  <!-- TRABALHO -->
+  <div class="section">
+    <div class="section-header" onclick="toggleSection(this)">
+      <span class="icon">💼</span> Trabalho (Home Office)
+      <span class="chevron">▾</span>
+    </div>
+    <div class="section-body">
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Notebook + carregador <span class="badge-obrig">BAGAGEM DE MÃO</span></div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Mouse</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Fone de ouvido</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Carregador de celular + cabos</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Power bank <span class="badge-obrig">SÓ NA MÃO</span></div>
+          <div class="item-note">Proibido na bagagem despachada — sempre na bagagem de mão</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Adaptador/tomada extra <span class="item-opt">opcional</span></div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Bloco + caneta</div>
+        </div>
+      </label>
+    </div>
+  </div>
+
+  <!-- ROUPA -->
+  <div class="section">
+    <div class="section-header" onclick="toggleSection(this)">
+      <span class="icon">👕</span> Vestuário
+      <span class="chevron">▾</span>
+    </div>
+    <div class="section-body">
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Roupa casual passeio (4–5 conjuntos)</div>
+          <div class="item-note">Um por dia, com possibilidade de repetir peças</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Roupa pra sair à noite (1–2 opções)</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Agasalho leve</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Pijama</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Roupa íntima + meias</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Tênis confortável para caminhar</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Chinelo/sandália</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Bolsa/mochila do dia a dia</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Óculos de sol</div>
+        </div>
+      </label>
+    </div>
+  </div>
+
+  <!-- HIGIENE E SAÚDE -->
+  <div class="section">
+    <div class="section-header" onclick="toggleSection(this)">
+      <span class="icon">🧴</span> Higiene, Saúde e Líquidos
+      <span class="chevron">▾</span>
+    </div>
+    <div class="section-body">
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Necessaire transparente (até 1L) <span class="badge-obrig">OBRIGATÓRIO</span></div>
+          <div class="item-note">Para organizar os líquidos de até 100ml — exigência da inspeção de segurança</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Escova de dente + pasta (≤100ml)</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Shampoo/condicionador/sabonete líquido (≤100ml cada)</div>
+          <div class="item-note">Considere versões em barra para economizar espaço e evitar limite de líquido</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Desodorante</div>
+          <div class="item-note">Prefira o tipo bastão — aerossol/spray entra no limite de 100ml</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Protetor solar (≤100ml)</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Hidratante / oil de cabelo (≤100ml)</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Perfume (≤100ml) <span class="item-opt">opcional</span></div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Maquiagem básica</div>
+          <div class="item-note">Itens líquidos/cremosos (base, corretivo, demaquilante) entram no limite de 100ml</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Escova/pente de cabelo</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Protetor labial</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Medicamentos de uso contínuo <span class="badge-obrig">BAGAGEM DE MÃO</span></div>
+          <div class="item-note">Leve na embalagem original; se for líquido acima de 100ml, tenha receita/laudo em mãos</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Analgésico / remédio para enjoo</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Band-aid e pomada para pequenos ferimentos</div>
+        </div>
+      </label>
+    </div>
+  </div>
+
+  <!-- DOCUMENTOS E ESSENCIAIS -->
+  <div class="section">
+    <div class="section-header" onclick="toggleSection(this)">
+      <span class="icon">📱</span> Documentos e Essenciais
+      <span class="chevron">▾</span>
+    </div>
+    <div class="section-body">
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Documento de identificação (RG/CNH) <span class="badge-obrig">ESSENCIAL</span></div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Cartão de embarque / localizador da reserva</div>
+          <div class="item-note">Físico ou no celular — confira se o check-in já foi feito</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Cartão + dinheiro</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Celular + carregador</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Fones de ouvido</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Garrafa de água vazia</div>
+          <div class="item-note">Encha depois de passar pela inspeção de segurança</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Máscara <span class="item-opt">opcional</span></div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Tag de identificação para a mala</div>
+        </div>
+      </label>
+    </div>
+  </div>
+
+  <button class="reset-btn" onclick="resetAll()">🔄 Limpar todos os itens</button>
+
+  <script>
+    const STORAGE_KEY = 'voo-nacional-checklist';
+
+    function getState() {
+      try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; } catch { return {}; }
+    }
+
+    function saveState(state) {
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch { }
+    }
+
+    function updateProgress() {
+      const all = document.querySelectorAll('input[type="checkbox"]');
+      const checked = document.querySelectorAll('input[type="checkbox"]:checked');
+      const pct = all.length ? Math.round((checked.length / all.length) * 100) : 0;
+      document.getElementById('progress-fill').style.width = pct + '%';
+      document.getElementById('progress-text').textContent = checked.length + ' / ' + all.length;
+    }
+
+    function toggleSection(header) {
+      header.classList.toggle('collapsed');
+      header.nextElementSibling.classList.toggle('hidden');
+    }
+
+    function resetAll() {
+      if (!confirm('Deseja limpar todos os itens marcados?')) return;
+      document.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+        cb.checked = false;
+        cb.closest('.item').classList.remove('done');
+      });
+      saveState({});
+      updateProgress();
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const state = getState();
+      const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+
+      checkboxes.forEach((cb, i) => {
+        if (state[i]) {
+          cb.checked = true;
+          cb.closest('.item').classList.add('done');
+        }
+
+        cb.addEventListener('change', () => {
+          cb.closest('.item').classList.toggle('done', cb.checked);
+          const newState = getState();
+          newState[i] = cb.checked;
+          saveState(newState);
+          updateProgress();
+        });
+      });
+
+      updateProgress();
+    });
+  </script>
+
+</body>
+
+</html>
