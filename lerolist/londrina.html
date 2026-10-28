@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checklist – Londrina</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #fdeef5;
+      color: #3a1a2a;
+      min-height: 100vh;
+      padding: 24px 16px 48px;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    header h1 {
+      font-size: 1.7rem;
+      font-weight: 800;
+      color: #a3195b;
+      letter-spacing: 0.5px;
+    }
+
+    header p {
+      margin-top: 6px;
+      font-size: 0.9rem;
+      color: #d6337f;
+    }
+
+    .datas {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+    }
+
+    .data-badge {
+      background: #a3195b;
+      color: #fff;
+      border-radius: 20px;
+      padding: 5px 16px;
+      font-size: 0.82rem;
+      font-weight: 600;
+    }
+
+    .progress-wrap {
+      max-width: 640px;
+      margin: 0 auto 28px;
+    }
+
+    .progress-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.82rem;
+      color: #d6337f;
+      margin-bottom: 6px;
+    }
+
+    .progress-bar {
+      height: 10px;
+      background: #f8c6dc;
+      border-radius: 99px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #c2185b, #f06292);
+      border-radius: 99px;
+      transition: width 0.3s ease;
+      width: 0%;
+    }
+
+    .section {
+      max-width: 640px;
+      margin: 0 auto 20px;
+      background: #fff;
+      border-radius: 14px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+      overflow: hidden;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 18px;
+      background: #a3195b;
+      color: #fff;
+      font-weight: 700;
+      font-size: 0.92rem;
+      letter-spacing: 0.3px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .section-header .icon {
+      font-size: 1.1rem;
+    }
+
+    .section-header .chevron {
+      margin-left: auto;
+      transition: transform 0.2s;
+    }
+
+    .section-header.collapsed .chevron {
+      transform: rotate(-90deg);
+    }
+
+    .section-body {
+      padding: 8px 0;
+    }
+
+    .section-body.hidden {
+      display: none;
+    }
+
+    .item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 11px 18px;
+      border-bottom: 1px solid #fdeef5;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .item:last-child {
+      border-bottom: none;
+    }
+
+    .item:hover {
+      background: #fff5fa;
+    }
+
+    .item.done {
+      opacity: 0.55;
+    }
+
+    .item.done .item-text {
+      text-decoration: line-through;
+    }
+
+    .item input[type="checkbox"] {
+      width: 20px;
+      height: 20px;
+      accent-color: #c2185b;
+      cursor: pointer;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .item-text {
+      font-size: 0.9rem;
+      line-height: 1.4;
+      color: #3a1a2a;
+    }
+
+    .item-note {
+      font-size: 0.78rem;
+      color: #b0577f;
+      margin-top: 2px;
+    }
+
+    .item-opt {
+      font-size: 0.72rem;
+      background: #fbd9e8;
+      color: #8a1550;
+      border-radius: 99px;
+      padding: 1px 7px;
+      margin-left: 6px;
+      vertical-align: middle;
+      font-weight: 600;
+    }
+
+    .badge-obrig {
+      font-size: 0.68rem;
+      background: #e63946;
+      color: #fff;
+      border-radius: 99px;
+      padding: 1px 7px;
+      margin-left: 6px;
+      vertical-align: middle;
+      font-weight: 700;
+    }
+
+    .badge-delivery {
+      font-size: 0.68rem;
+      background: #8e44ad;
+      color: #fff;
+      border-radius: 99px;
+      padding: 1px 7px;
+      margin-left: 6px;
+      vertical-align: middle;
+      font-weight: 700;
+    }
+
+    .tip {
+      max-width: 640px;
+      margin: 0 auto 20px;
+      background: #fffbea;
+      border-left: 4px solid #e6a817;
+      border-radius: 10px;
+      padding: 12px 16px;
+      font-size: 0.85rem;
+      color: #5a4200;
+      line-height: 1.5;
+    }
+
+    .tip strong {
+      display: block;
+      margin-bottom: 4px;
+      color: #a06a00;
+    }
+
+    .obs-section {
+      max-width: 640px;
+      margin: 0 auto 20px;
+      background: #fff;
+      border-radius: 14px;
+      padding: 16px 18px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+    }
+
+    .obs-section h3 {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #a3195b;
+      margin-bottom: 8px;
+    }
+
+    .obs-section textarea {
+      width: 100%;
+      min-height: 70px;
+      border: 1px solid #f8c6dc;
+      border-radius: 8px;
+      padding: 8px 10px;
+      font-family: 'Segoe UI', sans-serif;
+      font-size: 0.84rem;
+      color: #3a1a2a;
+      resize: vertical;
+      outline: none;
+    }
+
+    .reset-btn {
+      display: block;
+      max-width: 640px;
+      margin: 8px auto 0;
+      background: none;
+      border: 2px solid #f8c6dc;
+      color: #d6337f;
+      border-radius: 10px;
+      padding: 10px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      width: 100%;
+      transition: all 0.2s;
+    }
+
+    .reset-btn:hover {
+      background: #fdeef5;
+      border-color: #d6337f;
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <h1>💍 Londrina</h1>
+    <p>Casamento · Trilha com cachoeira · Social</p>
+    <div class="datas">
+      <span class="data-badge">📅 29 Out – 2 Nov</span>
+      <span class="data-badge">🚗 De carro</span>
+      <span class="data-badge">💃 Casamento no domingo</span>
+    </div>
+  </header>
+
+  <div class="progress-wrap">
+    <div class="progress-label">
+      <span>Itens marcados</span>
+      <span id="progress-text">0 / 0</span>
+    </div>
+    <div class="progress-bar">
+      <div class="progress-fill" id="progress-fill"></div>
+    </div>
+  </div>
+
+  <div class="tip">
+    <strong>💡 Roteiro</strong>
+    Quinta 29 — viagem de carro. Sexta 30 — exercício + 2 programas sociais. Sábado 31 — trilha bate-volta com
+    cachoeira (levar mochila e toalha extra pra Camila) e saída à noite. Domingo 1 — casamento, com roupa pra antes
+    dele também. Segunda 2 — volta de carro.
+  </div>
+
+  <!-- PEGAR NA HORA - DIA 29 -->
+  <div class="section">
+    <div class="section-header" onclick="toggleSection(this)">
+      <span class="icon">🚗</span> Pegar na hora – Dia 29
+      <span class="chevron">▾</span>
+    </div>
+    <div class="section-body">
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Look confortável para dirigir + tênis</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Protetor solar</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Óculos de dirigir <span class="badge-obrig">ESSENCIAL</span></div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Sobreviver dirigindo <span class="badge-obrig">ESSENCIAL</span></div>
+          <div class="item-note">Garrafa de água, snack, chiclete, lixo</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Malas no carro</div>
+          <div class="item-note">Mala, mochila de trilha, mochila extra da Camila, sacola do casamento, tênis</div>
+        </div>
+      </label>
+    </div>
+  </div>
+
+  <!-- CASAMENTO -->
+  <div class="section">
+    <div class="section-header" onclick="toggleSection(this)">
+      <span class="icon">💍</span> Casamento – Domingo 1
+      <span class="chevron">▾</span>
+    </div>
+    <div class="section-body">
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Macacão laranja <span class="badge-obrig">ESSENCIAL</span></div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Rasteirinha</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Sutiã</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Relógio</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Brinco</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Bolsa</div>
+          <div class="item-note">Com band-aid dentro</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Abadá <span class="badge-obrig">ESSENCIAL</span></div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Roupa pra antes do casamento</div>
+          <div class="item-note">Domingo de dia</div>
+        </div>
+      </label>
+    </div>
+  </div>
+
+  <!-- SEXTA -->
+  <div class="section">
+    <div class="section-header" onclick="toggleSection(this)">
+      <span class="icon">📅</span> Sexta 30
+      <span class="chevron">▾</span>
+    </div>
+    <div class="section-body">
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Roupa de exercício <span class="badge-obrig">1 CONJUNTO</span></div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Roupa social <span class="badge-obrig">2 CONJUNTOS</span></div>
+        </div>
+      </label>
+    </div>
+  </div>
+
+  <!-- SABADO - TRILHA -->
+  <div class="section">
+    <div class="section-header" onclick="toggleSection(this)">
+      <span class="icon">🥾</span> Sábado 31 – Trilha bate-volta com cachoeira
+      <span class="chevron">▾</span>
+    </div>
+    <div class="section-body">
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Roupa de trilha</div>
+          <div class="item-note">Calça/short, camiseta UV + top</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Bota ou tênis trail run + meia grossa</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Biquíni</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Mochila de ataque</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Camelback ou garrafa de água</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Toalha (cachoeira)</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Mochila extra + toalha extra <span class="badge-obrig">ESSENCIAL</span></div>
+          <div class="item-note">Pra Camila na cachoeira</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Boné + óculos de sol</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Lanches de trilha</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Lanterna de cabeça + apito</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Saco estanque / ziplock pro celular</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Chinelo</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Roupa da noite</div>
+          <div class="item-note">Sábado à noite</div>
+        </div>
+      </label>
+    </div>
+  </div>
+
+  <!-- SEGUNDA - VOLTA -->
+  <div class="section">
+    <div class="section-header" onclick="toggleSection(this)">
+      <span class="icon">🏁</span> Segunda 2 – Volta
+      <span class="chevron">▾</span>
+    </div>
+    <div class="section-body">
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Look confortável para dirigir</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Itens pra dirigir <span class="badge-obrig">ESSENCIAL</span></div>
+          <div class="item-note">Óculos de dirigir, garrafa de água, snack, chiclete, lixo</div>
+        </div>
+      </label>
+    </div>
+  </div>
+
+  <!-- DESCANSO -->
+  <div class="section">
+    <div class="section-header" onclick="toggleSection(this)">
+      <span class="icon">🌙</span> Roupa de Descanso
+      <span class="chevron">▾</span>
+    </div>
+    <div class="section-body">
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Pijama <span class="badge-obrig">2 CONJUNTOS</span></div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Roupa casual extra</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Chinelo</div>
+        </div>
+      </label>
+    </div>
+  </div>
+
+  <!-- ROUPA INTIMA -->
+  <div class="section">
+    <div class="section-header" onclick="toggleSection(this)">
+      <span class="icon">🩲</span> Roupa Íntima
+      <span class="chevron">▾</span>
+    </div>
+    <div class="section-body">
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Calcinhas <span class="badge-obrig">6 UNIDADES</span></div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Sutiã/top <span class="badge-obrig">3 UNIDADES</span></div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Meias <span class="badge-obrig">3 PARES</span></div>
+        </div>
+      </label>
+    </div>
+  </div>
+
+  <!-- HIGIENE -->
+  <div class="section">
+    <div class="section-header" onclick="toggleSection(this)">
+      <span class="icon">🧴</span> Kit Higiene e Cuidados
+      <span class="chevron">▾</span>
+    </div>
+    <div class="section-body">
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Shampoo + condicionador</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Sabonete</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Desodorante</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Escova de dente + pasta + fio dental</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Escova de cabelo</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Creme pentear + geleia + óleo</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Hidratante rosto e corpo</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Maquiagem + perfume (casamento)</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Lenço umedecido</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Remédios habituais</div>
+          <div class="item-note">Meclin, GastroPro, Polaramine, remédio dor de cabeça/corpo</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Band-aid / kit primeiros socorros básico</div>
+        </div>
+      </label>
+    </div>
+  </div>
+
+  <!-- ELETRONICOS -->
+  <div class="section">
+    <div class="section-header" onclick="toggleSection(this)">
+      <span class="icon">📱</span> Eletrônicos
+      <span class="chevron">▾</span>
+    </div>
+    <div class="section-body">
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Carregador de celular <span class="badge-obrig">ESSENCIAL</span></div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Powerbank + cabo</div>
+        </div>
+      </label>
+      <label class="item">
+        <input type="checkbox">
+        <div>
+          <div class="item-text">Relógio + cabo</div>
+        </div>
+      </label>
+    </div>
+  </div>
+
+  <div class="obs-section">
+    <h3>📝 Observações</h3>
+    <textarea id="obs" placeholder="Anote aqui qualquer detalhe específico desta viagem..."></textarea>
+  </div>
+
+  <button class="reset-btn" onclick="resetAll()">🔄 Limpar todos os itens</button>
+
+  <script>
+    const STORAGE_KEY = 'londrina-checklist';
+    const OBS_KEY = 'londrina-obs';
+
+    function getState() {
+      try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; } catch { return {}; }
+    }
+
+    function saveState(state) {
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch { }
+    }
+
+    function updateProgress() {
+      const all = document.querySelectorAll('input[type="checkbox"]');
+      const checked = document.querySelectorAll('input[type="checkbox"]:checked');
+      const pct = all.length ? Math.round((checked.length / all.length) * 100) : 0;
+      document.getElementById('progress-fill').style.width = pct + '%';
+      document.getElementById('progress-text').textContent = checked.length + ' / ' + all.length;
+    }
+
+    function toggleSection(header) {
+      header.classList.toggle('collapsed');
+      header.nextElementSibling.classList.toggle('hidden');
+    }
+
+    function resetAll() {
+      if (!confirm('Deseja limpar todos os itens marcados?')) return;
+      document.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+        cb.checked = false;
+        cb.closest('.item').classList.remove('done');
+      });
+      saveState({});
+      updateProgress();
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const state = getState();
+      const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+
+      checkboxes.forEach((cb, i) => {
+        if (state[i]) {
+          cb.checked = true;
+          cb.closest('.item').classList.add('done');
+        }
+
+        cb.addEventListener('change', () => {
+          cb.closest('.item').classList.toggle('done', cb.checked);
+          const newState = getState();
+          newState[i] = cb.checked;
+          saveState(newState);
+          updateProgress();
+        });
+      });
+
+      const obs = document.getElementById('obs');
+      obs.value = localStorage.getItem(OBS_KEY) || '';
+      obs.addEventListener('input', () => {
+        try { localStorage.setItem(OBS_KEY, obs.value); } catch { }
+      });
+
+      updateProgress();
+    });
+  </script>
+
+</body>
+
+</html>
